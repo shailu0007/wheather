@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+{{>header}}
+  <body>
+	  {{>navbar}}
+    <!-- END nav -->
+
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('images/bg-1.jpg');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+          <div class="col-md-9 ftco-animate pb-5 text-center">
+            <h2 class="mb-0 bread">Wheather</h2>
+            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>wheather <i class="ion-ios-arrow-round-forward"></i></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="ftco-section ftco-no-pb ftco-no-pt">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-12 py-md-5 pb-5 wrap-about pb-md-5 ftco-animate text-center">
+	                 <form action="">
+                        <input type="text" placeholder="Enter city name" id="cityname">
+                        <input type="submit" value="Search" id="searchbtn">
+                     </form>
+					</div>
+                    <div class="col-md-12 py-md-5 pb-5 wrap-about pb-md-5 mb-5 ftco-animate text-center bg-dark rounded">
+	                <div class="toplayer d-flex justify-content-center bg-dark">
+                        <p class="pr-3" id="day">
+                            Tuesday
+                        </p>
+                        <p id="todaydate">
+                            13 Oct
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="mainlayer">
+                        <p id="city_name">
+                            Get output here
+                        </p>
+                        <div class="lastlayer data-hidden d-flex justify-content-around justify-content-center" id="lastlayer">
+                            <p><span id="temp">0</span><sup>o</sup>C</p>
+                            <p id="temp_status"> <img src="images/cloud.png" style="height: 40px; width:40px;" alt=""> </p>
+                        </div>
+                    </div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+ {{>footer}}
+    
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+<script>
+    const searchbtn = document.getElementById("searchbtn");
+    const cityname = document.getElementById("cityname");
+    const city_name = document.getElementById('city_name');
+    const temp = document.getElementById('temp');
+    const temp_status = document.getElementById('temp_status');
+    const lastlayer = document.getElementById('lastlayer');
+    const day = document.getElementById('day');
+    const todaydate = document.getElementById('todaydate');
+// date and time 
+    var dayName = new Date().toLocaleDateString('en-us', { weekday:"long"});
+    day.innerHTML = dayName;
+    todaydate.innerHTML = new Date().toLocaleDateString('en-us', {day:"numeric",month:"short"});
+// wheather api
+    const getinfo = async(event) =>{
+        event.preventDefault();
+        let citynameval = cityname.value;
+        if(citynameval){
+        try{
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${citynameval}&appid=3cc04ac3b88335f96a2ebb5bb5ec0c28`;
+        let response = await fetch(url)
+        let data = await response.json();
+        let dataarry = [data];
+        temp.innerText = dataarry[0].main.temp;
+        temp_status.innerText = dataarry[0].weather[0].main;
+        let wheatherstatus = dataarry[0].weather[0].main;
+
+        if(wheatherstatus === "Clear"){
+          temp_status.innerHTML = "<i class='fas fa-sun' style='color:#eccc68'></i>";
+        } else if(wheatherstatus === "Clouds"){
+          temp_status.innerHTML = "<i class='fas fa-cloud' style='color:#f1f2f6'></i>";
+        } else if(wheatherstatus === "Clouds"){
+          temp_status.innerHTML = "<i class='fas fa-cloud-rain' style='color:#a4b0be'></i>";
+        } else{
+          temp_status.innerHTML = "<i class='fas fa-sun' style='color:#eccc68'></i>";
+        }
+
+        document.getElementById("city_name").innerHTML = `${dataarry[0].name},${dataarry[0].sys.country}`;
+        document.getElementById("lastlayer").style.visibility = "visible";
+        }catch{
+          city_name.innerHTML = "please enter the city name properly or check the spelling";
+          document.getElementById("lastlayer").style.visibility = "hidden";
+        }
+             } else{
+        city_name.innerHTML = "please enter the city name before";
+        document.getElementById("lastlayer").style.visibility = "hidden";
+        }
+    }
+    
+    searchbtn.addEventListener('click',getinfo);
+</script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/bootstrap-datepicker.js"></script>
+  <script src="js/jquery.timepicker.min.js"></script>
+  <script src="js/scrollax.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="js/google-map.js"></script>
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>
